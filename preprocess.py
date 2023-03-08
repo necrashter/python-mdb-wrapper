@@ -1,7 +1,18 @@
 # Preprocessing steps: loading files, breakpoints, etc.
+import pathlib
 from .exceptions import *
 
-def load_breakpoints(sfile: str, cmffile: str, bps: list):
+PROJECT_NAME = pathlib.Path().absolute().parent.name
+
+if PROJECT_NAME.endswith(".X"):
+    ELF_FILE = f"../dist/default/production/{PROJECT_NAME}.production.elf"
+    CMF_FILE = f"../dist/default/production/{PROJECT_NAME}.production.cmf"
+    ASM_FILE = "../main.s"
+else:
+    print(f"Parent directory ({PROJECT_NAME}) doesn't end with .X")
+    print("You are probably running the script in the wrong directory.")
+
+def load_breakpoints(sfile: str, cmffile: str, bps: list[str]):
     line2bp = {}
     bp2line = {}
     with open(sfile, 'r') as f:
