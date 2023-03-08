@@ -14,14 +14,12 @@ class Mdb:
     """
 
     def __init__(self):
-        print("Initializing MDB Python Wrapper")
         self.p = subprocess.Popen(
                 "mdb", stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         while True:
             line = self.p.stderr.readline().decode()
             if line.startswith("WARNING: Unable to create a system terminal, creating a dumb terminal"):
                 break
-        print("MDB Python Wrapper is ready")
         # Output of last command
         self.last = []
         self.running = False

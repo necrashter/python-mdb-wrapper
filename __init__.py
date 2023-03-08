@@ -9,9 +9,16 @@ class MdbTester:
         self.m = None
 
     def run(self, tests: list):
-        self.bp2addr, self.addr2bp = load_breakpoints(ASM_FILE, CMF_FILE, self.breakpoints)
-        self.m = Mdb()
-        self.m.prelude(self.prelude)
+        try:
+            check_files()
+            self.bp2addr, self.addr2bp = load_breakpoints(ASM_FILE, CMF_FILE, self.breakpoints)
+            self.m = Mdb()
+            self.m.prelude(self.prelude)
+        except TestFailed as e:
+            print("INITIALIZATION FAILED:", e)
+            return
+        else:
+            print("INITIALIZATION SUCCESSFUL")
         for test in tests:
             print("\nRUNNING TEST:", test.__name__)
             if test.__doc__ is not None:

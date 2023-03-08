@@ -1,4 +1,5 @@
 # Preprocessing steps: loading files, breakpoints, etc.
+import os
 import pathlib
 from .exceptions import *
 
@@ -11,6 +12,17 @@ if PROJECT_NAME.endswith(".X"):
 else:
     print(f"Parent directory ({PROJECT_NAME}) doesn't end with .X")
     print("You are probably running the script in the wrong directory.")
+
+def check_files():
+    """
+    Check if .elf, .cmf, and .s files exist.
+    """
+    if not os.path.isfile(ASM_FILE):
+        # Testing setup is wrong if no ASM file
+        raise MdbException("ASM_FILE not found!")
+    if not os.path.isfile(ELF_FILE) or not os.path.isfile(CMF_FILE):
+        # This must be because compile failed
+        raise TestFailed("Compile failed!")
 
 def load_breakpoints(sfile: str, cmffile: str, bps: list[str]):
     line2bp = {}
