@@ -16,7 +16,7 @@ class MdbTester:
             try:
                 test(self.m, self.bp2addr, self.addr2bp)
             except TestFailed as e:
-                print("Test failed: ", test.func_name)
+                print("Test failed:", test.__name__)
                 print(e)
             # TODO: reset
         self.m.quit()

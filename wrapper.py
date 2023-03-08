@@ -83,7 +83,7 @@ class Mdb:
         lines = self.cont_timeout(timeout)
         bp = get_breakpoint(lines)
         if not bp:
-            raise MdbException("Timeout is reached while waiting for a breakpoint")
+            raise TestFailed("Timeout is reached while waiting for a breakpoint")
         return bp
 
     def stopwatch(self):

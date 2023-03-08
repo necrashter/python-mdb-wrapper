@@ -20,9 +20,12 @@ def load_breakpoints(sfile: str, cmffile: str, bps: list[str]):
             for bp in bps:
                 if line.startswith(bp + ":"):
                     if bp in bp2line:
-                        raise MdbException("Label \"" + bp + "\" was defined multiple times")
+                        raise TestFailed("Label " + bp + " was defined multiple times")
                     bp2line[bp] = n + 1
                     line2bp[n + 1] = bp
+    undefined_labels = [label for label in bps if label not in bp2line]
+    if undefined_labels:
+        raise TestFailed("Following labels were undefined: " + ", ".join(undefined_labels))
     bp2addr = {}
     addr2bp = {}
     with open(cmffile, 'r') as f:
@@ -39,5 +42,4 @@ def load_breakpoints(sfile: str, cmffile: str, bps: list[str]):
                 bp = line2bp[n]
                 bp2addr[bp] = addr
                 addr2bp[addr] = bp
-    assert len(bp2addr) == len(bps)
     return bp2addr, addr2bp
