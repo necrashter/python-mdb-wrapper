@@ -13,11 +13,14 @@ class MdbTester:
         self.m = Mdb()
         self.m.prelude(self.prelude)
         for test in tests:
+            print("\nRUNNING TEST:", test.__name__)
+            if test.__doc__ is not None:
+                print("\t" + test.__doc__.strip())
             try:
                 test(self.m, self.bp2addr, self.addr2bp)
             except TestFailed as e:
-                print("Test failed:", test.__name__)
-                print(e)
-            # TODO: reset
+                print("TEST FAILED:", e)
+            finally:
+                self.m.reset()
         self.m.quit()
 

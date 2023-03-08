@@ -113,3 +113,10 @@ class Mdb:
         Clear BreakPoints.
         """
         return self.exec("delete")
+
+    def reset(self):
+        """
+        Halt the execution and reset the simulator (including hardware reset).
+        Also clears breakpoints.
+        """
+        return self.exec("halt\ndelete\nreset MCLR")
