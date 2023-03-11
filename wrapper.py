@@ -112,6 +112,23 @@ class Mdb:
         """
         return self.exec("delete")
 
+    def watch(self, watchpoint):
+        """
+        Set watch point.
+        Argument must be of form: "address breakonType[:value]"
+        address can be a variable name.
+        breakonType: W or RW
+        """
+        return self.exec("watch " + watchpoint)
+
+    def get(self, name):
+        """
+        Get a variable by name or address.
+        """
+        out = self.exec("print " + name)
+        line = out[0].strip()
+        return int(line[line.rindex('=')+1:])
+
     def reset(self):
         """
         Halt the execution and reset the simulator (including hardware reset).
