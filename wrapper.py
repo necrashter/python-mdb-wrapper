@@ -124,11 +124,11 @@ class Mdb:
             raise MdbException("Set watchpoint error:\n" + "".join(out))
         return out
 
-    def get(self, name: str):
+    def get(self, name: str, datasize: int = 1):
         """
         Get a variable by name or address.
         """
-        out = self.exec("print " + name)
+        out = self.exec("print /datasize:" + str(datasize) + " " + name)
         line = out[0].strip()
         value = line[line.rindex('=')+1:]
         if value.startswith("Symbol does not exist"):
