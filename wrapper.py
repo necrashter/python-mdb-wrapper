@@ -64,7 +64,7 @@ class Mdb:
         self.p.stdin.flush()
         return self.p.wait()
 
-    def cont_timeout(self, timeout = 15000):
+    def run_timeout(self, timeout = 15000):
         """
         Run until a breakpoint is reached or timeout (15 seconds).
         """
@@ -73,12 +73,12 @@ class Mdb:
         else:
             return self.exec("run\nwait " + str(timeout))
 
-    def cont(self, timeout = 15000):
+    def run(self, timeout = 15000):
         """
         Run until a breakpoint is reached and raise an exception if timeout (15 seconds).
         Returns the address of breakpoint.
         """
-        lines = self.cont_timeout(timeout)
+        lines = self.run_timeout(timeout)
         bp = get_breakpoint(lines)
         if not bp:
             raise TestFailed("Timeout is reached while waiting for a breakpoint")
@@ -94,21 +94,21 @@ class Mdb:
             if "Stopwatch cycle count" in line:
                 return int(line[line.index('=')+2:line.index('(')-1])
 
-    def bp(self, bp):
+    def breakpoint(self, bp):
         """
-        BreakPoint.
+        Add a new breakpoint.
         """
         return self.exec("break *" + bp)
 
-    def obp(self, bp):
+    def only_breakpoint(self, bp):
         """
-        Only BreakPoint. Clears all breakpoints and enables the given breakpoint.
+        Clears all breakpoints and enables the given breakpoint.
         """
         return self.exec("delete\nbreak *" + bp)
 
-    def clearbp(self):
+    def clear_breakpoints(self):
         """
-        Clear BreakPoints.
+        Clear all Breakpoints.
         """
         return self.exec("delete")
 
