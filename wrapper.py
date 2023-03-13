@@ -121,13 +121,20 @@ class Mdb:
         """
         return self.exec("watch " + watchpoint)
 
-    def get(self, name):
+    def get(self, name: str):
         """
         Get a variable by name or address.
         """
         out = self.exec("print " + name)
         line = out[0].strip()
-        return int(line[line.rindex('=')+1:])
+        value = line[line.rindex('=')+1:]
+        if value.startswith("Symbol does not exist"):
+            raise TestFailed("Symbol does not exist: " + str(name))
+        elif value:
+            return int(value)
+        else:
+            # Sometimes it prints to the newline
+            return int(out[1].strip())
 
     def reset(self):
         """
