@@ -135,3 +135,22 @@ class Mdb:
         Also clears breakpoints.
         """
         return self.exec("halt\ndelete\nreset MCLR")
+
+    def step(self):
+        """
+        Step program until it reaches a different source line.
+        Only enters a function if there is line number information for the function.
+        """
+        return self.exec("step")
+
+    def next(self):
+        """
+        Equivalent to the step command but treats subroutine calls as one instruction.
+        """
+        return self.exec("next")
+
+    def stepi(self, n: int = 1):
+        """
+        Execute the given number of machine instructions.
+        """
+        return self.exec("stepi " + str(n))
