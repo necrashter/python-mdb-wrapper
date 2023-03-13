@@ -4,8 +4,8 @@ from .exceptions import *
 
 def get_breakpoint(output):
     for line in output:
-        if line.startswith("\taddress:"):
-            return line[11:-1].upper()
+        if "\taddress:" in line:
+            return line[line.rindex(':')+1:-1].upper()
     return None
 
 class Mdb:
@@ -36,7 +36,7 @@ class Mdb:
         lines = []
         while True:
             line = self.p.stdout.readline().decode()
-            if line.startswith(">/*DONE"):
+            if line.endswith("/*DONE*/\n"):
                 break
             lines.append(line)
         return lines
@@ -119,7 +119,10 @@ class Mdb:
         address can be a variable name.
         breakonType: W or RW
         """
-        return self.exec("watch " + watchpoint)
+        out = self.exec("watch " + watchpoint)
+        if out[0].startswith(">Error: "):
+            raise MdbException("Set watchpoint error:\n" + "".join(out))
+        return out
 
     def get(self, name: str):
         """
