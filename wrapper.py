@@ -139,9 +139,9 @@ class Mdb:
     def reset(self):
         """
         Halt the execution and reset the simulator (including hardware reset).
-        Also clears breakpoints.
+        Also clears breakpoints and the stimulus file.
         """
-        return self.exec("halt\ndelete\nreset MCLR")
+        return self.exec("halt\ndelete\nstim\nreset MCLR")
 
     def step(self):
         """
@@ -161,3 +161,16 @@ class Mdb:
         Execute the given number of machine instructions.
         """
         return self.exec("stepi " + str(n))
+
+    def stim(self, stimfile = None):
+        """
+        Set the stimulus .scl file or clear it if no path is given.
+        """
+        if stimfile:
+            out = self.exec('stim "%s"' % stimfile.strip())
+            for line in out:
+                if line.startswith("Invalid stimulus file"):
+                    raise MdbException("Invalid stimulus file: " + stimfile)
+            return out
+        else:
+            return self.exec("stim")
