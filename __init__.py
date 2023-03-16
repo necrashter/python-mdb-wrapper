@@ -22,8 +22,9 @@ class MdbTester:
             return
         else:
             print("INITIALIZATION SUCCESSFUL")
+
         for test in tests:
-            print("\nRUNNING TEST:", test.__name__)
+            print("\n\nRUNNING TEST:", test.__name__)
             if test.__doc__ is not None:
                 print("\t" + test.__doc__.strip())
             try:

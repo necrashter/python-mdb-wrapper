@@ -38,6 +38,8 @@ class Mdb:
             line = self.p.stdout.readline().decode()
             if line.endswith("/*DONE*/\n"):
                 break
+            # else:  # Uncomment for quick debugging
+            #     print("[MDB]", line)
             lines.append(line)
         return lines
 
