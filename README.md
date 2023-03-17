@@ -17,6 +17,10 @@ Example use case: This wrapper allows you to write a grader script more easily.
 
 TODO: More documentation will be added later.
 
+## License
+
+MIT License. See [LICENSE](LICENSE) for more details.
+
 # Relevant Resources
 
 - [Microchip Debugger (MDB) User's Guide](https://ww1.microchip.com/downloads/en/DeviceDoc/50002102G.pdf)
