@@ -24,7 +24,7 @@ def check_files():
         # This must be because compile failed
         raise TestFailed("Compile failed!")
 
-def load_breakpoints(sfile: str, cmffile: str, bps: list[str]):
+def load_breakpoints(sfile: str, cmffile: str, bps: list):
     line2bp = {}
     bp2line = {}
     with open(sfile, 'r') as f:

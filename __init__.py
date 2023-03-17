@@ -3,7 +3,7 @@ from .preprocess import *
 from time import time
 
 class MdbTester:
-    def __init__(self, prelude: str, breakpoints: list[str]):
+    def __init__(self, prelude: str, breakpoints: list):
         self.prelude = prelude.strip() + "\nprogram " + ELF_FILE
         self.breakpoints = breakpoints
         self.bp2addr, self.addr2bp = None, None
