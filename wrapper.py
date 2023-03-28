@@ -22,7 +22,6 @@ class Mdb:
                 break
         # Output of last command
         self.last = []
-        self.running = False
 
     def exec(self, command):
         """
@@ -69,18 +68,17 @@ class Mdb:
     def run_timeout(self, timeout = 15000):
         """
         Run until a breakpoint is reached or timeout (15 seconds).
+        Returns the address of breakpoint, None if timeout.
         """
-        if self.running:
-            return self.exec("continue\nwait " + str(timeout))
-        else:
-            return self.exec("run\nwait " + str(timeout))
+        lines = self.exec("continue\nwait " + str(timeout))
+        return get_breakpoint(lines)
 
     def run(self, timeout = 15000):
         """
         Run until a breakpoint is reached and raise an exception if timeout (15 seconds).
         Returns the address of breakpoint.
         """
-        lines = self.run_timeout(timeout)
+        lines = self.exec("continue\nwait " + str(timeout))
         bp = get_breakpoint(lines)
         if not bp:
             raise TestFailed("Timeout is reached while waiting for a breakpoint")
