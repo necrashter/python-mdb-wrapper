@@ -65,17 +65,17 @@ class Mdb:
         self.p.stdin.flush()
         return self.p.wait()
 
-    def run_timeout(self, timeout = 15000):
+    def run_timeout(self, timeout = 30000):
         """
-        Run until a breakpoint is reached or timeout (15 seconds).
+        Run until a breakpoint is reached or timeout (30 seconds).
         Returns the address of breakpoint, None if timeout.
         """
         lines = self.exec("continue\nwait " + str(timeout))
         return get_breakpoint(lines)
 
-    def run(self, timeout = 15000):
+    def run(self, timeout = 30000):
         """
-        Run until a breakpoint is reached and raise an exception if timeout (15 seconds).
+        Run until a breakpoint is reached and raise an exception if timeout (30 seconds).
         Returns the address of breakpoint.
         """
         lines = self.exec("continue\nwait " + str(timeout))
