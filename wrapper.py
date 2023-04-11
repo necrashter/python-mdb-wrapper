@@ -71,15 +71,33 @@ class Mdb:
         Returns the address of breakpoint, None if timeout.
         """
         lines = self.exec("continue\nwait " + str(timeout))
-        return get_breakpoint(lines)
+        # Usual output:
+        # ['>Running\n', '\n', '>\n', 'Single breakpoint: @0xF89\n', 'Simulator halted\n', 'Stop at\n', '\taddress:0x1a6\n', '\tfile:/home/.../main.s\n', '\tsource line:317\n', '\n', '>\n']
+        # Worst case:
+        # ['>Running\n', '\n', '>\n', 'Single breakpoint: @0xF89\n', 'Simulator halted\n', '\n']
+        # Address in the next command's output
+        # Timeout:
+        # ['>Running\n', '\n', '>\n'] or ['>\n', '>\n']
+        bp = get_breakpoint(lines)
+        if bp is not None:
+            return bp
+        if not [i for i in lines if i.startswith("Simulator halted")]:
+            # Genuine timeout
+            return bp
+        print("TESTER: Run didn't timeout but we don't have any address information.")
+        lines = self.exec("halt")
+        bp = get_breakpoint(lines)
+        if bp is not None:
+            print("TESTER: Determined the address from the next command.")
+            return bp
+        raise MdbException("Failed to determine the address of breakpoint.")
 
     def run(self, timeout = 30000):
         """
         Run until a breakpoint is reached and raise an exception if timeout (30 seconds).
         Returns the address of breakpoint.
         """
-        lines = self.exec("continue\nwait " + str(timeout))
-        bp = get_breakpoint(lines)
+        bp = self.run_timeout(timeout)
         if not bp:
             raise TestFailed("Timeout is reached while waiting for a breakpoint")
         return bp
