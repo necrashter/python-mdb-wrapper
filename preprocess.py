@@ -41,15 +41,21 @@ def load_breakpoints(sfile: str, cmffile: str, bps: list):
     bp2addr = {}
     addr2bp = {}
     with open(cmffile, 'r') as f:
-        for line in f.readlines():
+        lines = f.readlines()
+        line_tab_i = lines.index("%LINETAB\n")
+        sym_tab_i = lines.index("%SYMTAB\n")
+        lines = [line for line in lines[line_tab_i+2:sym_tab_i] if not line.startswith("#")]
+        for line in lines:
             # 1FDAA resetVec CODE >67:/home/
+            # 34 CODE ABS >93:/home/
             splitted = line.split(None, 1)
             if len(splitted) < 2:
                 continue
             addr, info = splitted
-            if not info.startswith("resetVec CODE"):
+            try:
+                n = int(info[info.index('>')+1:info.index(':')])
+            except ValueError:
                 continue
-            n = int(info[info.index('>')+1:info.index(':')])
             if n in line2bp:
                 bp = line2bp[n]
                 bp2addr[bp] = addr
