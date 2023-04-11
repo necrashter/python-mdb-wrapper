@@ -211,3 +211,13 @@ class Mdb:
             return out
         else:
             return self.exec("stim")
+
+    def repr(self):
+        """
+        Read the inputs to the MDB from stdin and writes MDB outputs to stdout.
+        For quick debugging.
+        """
+        while command := input("> ").strip():
+            if command == 'q' or command == "quit":
+                break
+            print("\n".join([line for l in self.exec(command) if (line := l.strip())]))
