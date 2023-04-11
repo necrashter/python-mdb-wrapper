@@ -84,12 +84,15 @@ class Mdb:
         if not [i for i in lines if i.startswith("Simulator halted")]:
             # Genuine timeout
             return bp
-        print("TESTER: Run didn't timeout but we don't have any address information.")
-        lines = self.exec("halt")
-        bp = get_breakpoint(lines)
-        if bp is not None:
-            print("TESTER: Determined the address from the next command.")
-            return bp
+        # Run didn't timeout but we don't have any address information.
+        old_lines = lines
+        for _ in range(5):
+            lines = self.exec("halt")
+            bp = get_breakpoint(lines)
+            if bp is not None:
+                # Determined the address from the next command
+                return bp
+            print("TESTER ERROR: Failed to get address info:", old_lines, lines)
         raise MdbException("Failed to determine the address of breakpoint.")
 
     def run(self, timeout = 30000):
