@@ -128,9 +128,25 @@ class Mdb:
         """
         Get a variable by name or address.
         """
-        out = self.exec("print /datasize:" + str(datasize) + " " + name)
-        line = out[0].strip()
-        value = line[line.rindex('=')+1:]
+        command = "print /datasize:" + str(datasize) + " " + name
+        out = self.exec(command)
+        # The output is not always on the first line because it sometimes
+        # reports the breakpoint first.
+        for line in out[::-1]:
+            if '=' in line:
+                line = line.strip()
+                value = line[line.rindex('=')+1:]
+                break
+        else:
+            print("TESTER ERROR: VARIABLE GET FAILED\nLINES:")
+            print(out)
+            print("Trying again...")
+            out = self.exec(command)
+            print("This time:")
+            print(out)
+            line = out[0].strip()
+            value = line[line.rindex('=')+1:]
+            # Throws variable error if it still fails
         if value.startswith("Symbol does not exist"):
             raise TestFailed("Symbol does not exist: " + str(name))
         elif value:
