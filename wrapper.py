@@ -112,13 +112,13 @@ class Mdb:
             if "Stopwatch cycle count" in line:
                 return int(line[line.index('=')+2:line.index('(')-1])
 
-    def breakpoint(self, bp):
+    def breakpoint(self, bp: str):
         """
         Add a new breakpoint.
         """
         return self.exec("break *" + bp)
 
-    def only_breakpoint(self, bp):
+    def only_breakpoint(self, bp: str):
         """
         Clears all breakpoints and enables the given breakpoint.
         """
