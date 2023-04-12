@@ -5,6 +5,7 @@ from .exceptions import *
 def get_breakpoint(output):
     for line in output:
         if "\taddress:" in line:
+            line = line.replace(">", "")
             return line[line.rindex(':')+1:-1].upper()
     return None
 
@@ -81,7 +82,7 @@ class Mdb:
         bp = get_breakpoint(lines)
         if bp is not None:
             return bp
-        if not [i for i in lines if i.startswith("Simulator halted")]:
+        if not [i for i in lines if "Simulator halted" in i]:
             # Genuine timeout
             return bp
         # Run didn't timeout but we don't have any address information.
