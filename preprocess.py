@@ -30,7 +30,7 @@ def load_breakpoints(sfile: str, cmffile: str, bps: list):
     with open(sfile, 'r') as f:
         for n, line in enumerate(f.readlines()):
             for bp in bps:
-                if line.startswith(bp + ":"):
+                if line.strip().startswith(bp + ":"):
                     if bp in bp2line:
                         raise TestFailed("Label " + bp + " was defined multiple times")
                     bp2line[bp] = n + 1
