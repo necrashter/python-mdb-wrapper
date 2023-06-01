@@ -1,4 +1,5 @@
 # Wrapper for MDB
+import math
 import subprocess
 from .exceptions import *
 
@@ -203,6 +204,28 @@ class Mdb:
         Execute the given number of machine instructions.
         """
         return self.exec("stepi " + str(n))
+
+    def cycle(self, cycles: int):
+        """
+        Execute the program until the given number of cycles pass.
+        The simulater must be in halted state when this function is called, otherwise it won't
+        be able to precisely wait for the given number of cycles.
+
+        This function works by using stepi and stopwatch commands.
+        The stopwatch will be set to the number of passed cycles and its value will be returned.
+
+        Passed time can be one or rarely two cycles longer than the given value.
+        """
+        passed = 0
+        self.exec("stopwatch clear")
+
+        while passed < cycles:
+            # In the worst case, stepi will wait 2*i cycles.
+            n = math.ceil((cycles - passed) / 2)
+            self.exec("stepi " + str(n))
+            passed = self.stopwatch()
+
+        return passed
 
     def stim(self, stimfile = None):
         """
