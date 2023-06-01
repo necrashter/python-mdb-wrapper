@@ -115,6 +115,7 @@ class Mdb:
             # ['>Stopwatch cycle count = 4440176 (444.0176 ms)\n']
             if "Stopwatch cycle count" in line:
                 return int(line[line.index('=')+2:line.index('(')-1])
+        raise MdbException("Stopwatch command failed!")
 
     def breakpoint(self, bp: str):
         """
